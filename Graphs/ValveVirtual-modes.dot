@@ -1,0 +1,18 @@
+digraph "ValveVirtual (mode automaton)" {
+  label="ValveVirtual";
+	node[shape="box"];
+
+N0x55f5926452a0[label="(rate = 0)"]; 
+N0x55f592637220[label="(rate = 2)"]; 
+N0x55f592649be0[label="(rate = 1)"]; 
+N0x55f5926452a0[label="(rate = 0)"]; 
+N0x55f5926452a0 -> N0x55f5926452a0 [label=""];
+N0x55f5926452a0 -> N0x55f592649be0 [label="flow = (rateReal = 0)\nevent=inc"];
+N0x55f592637220[label="(rate = 2)"]; 
+N0x55f592637220 -> N0x55f592637220 [label=""];
+N0x55f592637220 -> N0x55f592649be0 [label="flow = (rateReal = 2)\nevent=dec"];
+N0x55f592649be0[label="(rate = 1)"]; 
+N0x55f592649be0 -> N0x55f592649be0 [label=""];
+N0x55f592649be0 -> N0x55f5926452a0 [label="flow = (rateReal = 1)\nevent=dec"];
+N0x55f592649be0 -> N0x55f592637220 [label="flow = (rateReal = 1)\nevent=inc"];
+}

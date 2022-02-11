@@ -1,0 +1,24 @@
+digraph StateGraph {
+  label="Valve";
+  N0x55f5930f6ef0 [label="rate = 0, stucked = 0"];
+  N0x55f5930f6ef0 -> N0x55f5930f9e61 [label="inc"];
+  N0x55f5930f6ef0 -> N0x55f5930f9e81 [label="inc"];
+  N0x55f5930f6ef0 -> N0x55f5930f9e61 [label="dec"];
+  N0x55f5930f6ef0 -> N0x55f5930f6ef0 [label="dec"];
+  N0x55f5930f9e61 [label="stucked = 1"];
+  N0x55f5930f9e61 -> N0x55f5930f9e61 [label="inc\ndec"];
+  N0x55f5930f9e81 [label="rate = 1, stucked = 0"];
+  N0x55f5930f9e81 -> N0x55f5930f9fe1 [label="inc"];
+  N0x55f5930f9e81 -> N0x55f5930f6f31 [label="inc"];
+  N0x55f5930f9e81 -> N0x55f5930f6ef0 [label="dec"];
+  N0x55f5930f9e81 -> N0x55f5930f9fe1 [label="dec"];
+  N0x55f5930f9fe1 [label="stucked = 1"];
+  N0x55f5930f9fe1 -> N0x55f5930f9fe1 [label="inc\ndec"];
+  N0x55f5930f6f31 [label="rate = 2, stucked = 0"];
+  N0x55f5930f6f31 -> N0x55f5930f6ed1 [label="inc"];
+  N0x55f5930f6f31 -> N0x55f5930f9e81 [label="dec"];
+  N0x55f5930f6f31 -> N0x55f5930f6ed1 [label="dec"];
+  N0x55f5930f6f31 -> N0x55f5930f6f31 [label="inc"];
+  N0x55f5930f6ed1 [label="stucked = 1"];
+  N0x55f5930f6ed1 -> N0x55f5930f6ed1 [label="inc\ndec"];
+}

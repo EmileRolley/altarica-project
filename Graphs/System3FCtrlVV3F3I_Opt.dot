@@ -1,0 +1,7 @@
+digraph StateGraph {
+  label="System3FCtrlVV3F3I_Opt";
+  N0x55f5930d3ca1 [label="ctrl = false"];
+  N0x55f5930d3ca1 -> N0x55f592676b91 [label="<env, T.time>"];
+  N0x55f592676b91 [label="ctrl = true"];
+  N0x55f592676b91 -> N0x55f5930d3ca1 [label="<cmd, C.nnn>"];
+}
