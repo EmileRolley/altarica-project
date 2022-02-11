@@ -1,0 +1,15 @@
+node Valve
+  state rate : [0,2] : public;
+        stucked : [0,1] : public;
+  init  rate := 0;
+        stucked := 0;
+  event dec, inc;
+  trans stucked=0 |- dec -> rate := rate - 1;
+        stucked=0 |- inc -> rate := rate + 1;
+	stucked=0 & rate=0 |- dec -> ;
+	stucked=0 & rate=2 |- inc -> ;
+        /* a problem may appear */
+        stucked=0 |- dec, inc -> stucked := 1;
+	/* After the failure, the valve is stuck */
+	stucked=1 |- dec, inc -> ;
+edon

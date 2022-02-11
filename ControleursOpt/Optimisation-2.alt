@@ -1,0 +1,10 @@
+event
+  /* 
+   * les priorites dependent des actions sur la vanne aval
+   * inc > nop > dec
+   */
+  {ddi, dii, dni, idi, iii, ini, ndi, nii, nni} >
+    {ddn, din, dnn, idn, iin, inn, ndn, nin, nnn};
+  {ddn, din, dnn, idn, iin, inn, ndn, nin, nnn} >
+    {ddd, did, dnd, idd, iid, ind, ndd, nid, nnd};
+edon

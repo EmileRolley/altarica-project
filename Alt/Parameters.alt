@@ -1,0 +1,9 @@
+/* nbSensors : the number of sensors
+*  nbSensors must be greater or equal to 4
+*/
+const nbSensors = 4;
+
+/* nbFailures : the maximum number if failures (0, 1, 2 or 3)
+*  nbFailures is use to limit the reachables configurations
+*/
+const nbFailures = NbPannes;

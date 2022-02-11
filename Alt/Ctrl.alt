@@ -1,0 +1,16 @@
+node Ctrl
+  /* Controller observations 
+  */
+  flow   rate : [0,2][3];
+         level : [0,nbSensors];
+  /* The 27 commands of the controller
+  * d for dec, i for inc and n for nop
+  */
+  event ddd, ddi, ddn, did, dii, din, dnd, dni, dnn,
+        idd, idi, idn, iid, iii, iin, ind, ini, inn,
+	ndd, ndi, ndn, nid, nii, nin, nnd, nni, nnn;
+  trans true |- ddd, ddi, ddn, did, dii, din, dnd, dni, dnn,
+                idd, idi, idn, iid, iii, iin, ind, ini, inn,
+	        ndd, ndi, ndn, nid, nii, nin, nnd, nni, nnn
+		-> ;
+edon
