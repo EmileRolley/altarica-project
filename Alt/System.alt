@@ -1,0 +1,47 @@
+node SystemNbPannesFNomDuControleur
+  sub   V : Valve[3];
+        T : Tank;
+	C : NomDuControleur;
+  assert T.input = (V[0].rate + V[1].rate);
+         T.output = V[2].rate;
+	 /* les observations du controleurs */
+	 C.rate[0] = V[0].rate;
+	 C.rate[1] = V[1].rate;
+	 C.rate[2] = V[2].rate;
+	 C.level = T.level;
+	 /* to limit the number of failures */
+	 nbFailures >= (V[0].stucked + V[1].stucked + V[2].stucked);
+  state ctrl : bool;
+  init  ctrl := true;
+  event env, cmd;
+  trans ctrl |- cmd -> ctrl := false;
+        ~ctrl |- env -> ctrl := true;
+  sync  <env, T.time>;
+        <C.ddd, cmd, V[0].dec, V[1].dec, V[2].dec>;
+        <C.ddi, cmd, V[0].dec, V[1].dec, V[2].inc>;
+        <C.ddn, cmd, V[0].dec, V[1].dec>;
+        <C.did, cmd, V[0].dec, V[1].inc, V[2].dec>;
+        <C.dii, cmd, V[0].dec, V[1].inc, V[2].inc>;
+        <C.din, cmd, V[0].dec, V[1].inc>;
+        <C.dnd, cmd, V[0].dec, V[2].dec>;
+        <C.dni, cmd, V[0].dec, V[2].inc>;
+        <C.dnn, cmd, V[0].dec>;
+        <C.idd, cmd, V[0].inc, V[1].dec, V[2].dec>;
+        <C.idi, cmd, V[0].inc, V[1].dec, V[2].inc>;
+        <C.idn, cmd, V[0].inc, V[1].dec>;
+        <C.iid, cmd, V[0].inc, V[1].inc, V[2].dec>;
+        <C.iii, cmd, V[0].inc, V[1].inc, V[2].inc>;
+        <C.iin, cmd, V[0].inc, V[1].inc>;
+        <C.ind, cmd, V[0].inc, V[2].dec>;
+        <C.ini, cmd, V[0].inc, V[2].inc>;
+        <C.inn, cmd, V[0].inc>;
+        <C.ndd, cmd, V[1].dec, V[2].dec>;
+        <C.ndi, cmd, V[1].dec, V[2].inc>;
+        <C.ndn, cmd, V[1].dec>;
+        <C.nid, cmd, V[1].inc, V[2].dec>;
+        <C.nii, cmd, V[1].inc, V[2].inc>;
+        <C.nin, cmd, V[1].inc>;
+        <C.nnd, cmd, V[2].dec>;
+        <C.nni, cmd, V[2].inc>;
+        <C.nnn, cmd>;
+edon

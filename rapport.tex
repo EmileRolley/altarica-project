@@ -1,0 +1,162 @@
+\documentclass[a4paper]{book}
+\usepackage{fullpage}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel}
+
+\usepackage{latexsym}
+\usepackage{fancyhdr}
+\usepackage{makeidx}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{moreverb}
+\usepackage{listings}
+
+\newcommand{\altarica}{{\sc AltaRica}}
+
+\begin{document}
+
+\title{Master 1, Conceptions Formelles\\
+Projet du module \altarica\\
+Synthèse (assistée) d'un contrôleur du niveau d'une cuve}
+
+\date{}
+
+\author{Nom1 \and Nom2 \and Nom3}
+
+\maketitle
+
+\chapter{Le sujet}
+\input{tank}
+
+\chapter{Le rapport}
+Le rapport est sur 20 points.
+
+\section{Processus}
+\subsection{Rôle du fichier {\tt GNUmakefile} (1.5 points)}
+% A COMPLETER en expliquant les enchainements des calculs effectués.
+
+\subsection{Rôle de la constante {\tt nbFailures} et de l'assertion associée (0.5 point)}
+% A COMPLETER en expliquant le rôle de la constante.
+
+\section{Résultats avec le contrôleur initial {\tt Ctrl}}
+\subsection{Calcul d'un contrôleur}
+\subsubsection{Avec 0 défaillance (0.5 point)}
+\input{LaTeX/System0FCtrl.tex}
+\paragraph{Interprétation des résultats}
+% A COMPLETER
+
+\subsubsection{Avec 1 défaillance (0.5 point)}
+\input{LaTeX/System1FCtrl.tex}
+\paragraph{Interprétation des résultats}
+% A COMPLETER
+
+\subsubsection{Avec 2 défaillances (0.5 point)}
+\input{LaTeX/System2FCtrl.tex}
+\paragraph{Interprétation des résultats}
+% A COMPLETER
+
+\subsubsection{Avec 3 défaillances (0.5 point)}
+\input{LaTeX/System3FCtrl.tex}
+\paragraph{Interprétation des résultats}
+% A COMPLETER
+
+\subsection{Bilan avec le contrôleur initial (1 point)}
+% A COMPLETER
+
+\section{Construction d'un contrôleur initial plus performant}
+\subsection{Rôle du composant {\tt ValveVirtual}(2 points)}
+\includegraphics[height=.2\textheight,width=.5\textwidth]{Graphs/Valve-modes.pdf}
+\includegraphics[height=.2\textheight,width=.5\textwidth]{Graphs/ValveVirtual-modes.pdf}
+% A COMPLETER en expliquant sa sémantique et son rôle.
+
+\subsection{Rôle du composant {\tt CtrlVV} (4 points)}
+% A COMPLETER en expliquant les mécanismes mis en oeuvre, leurs rôles et les avantages de ce contrôleur par rapport au précédent CtrlVV.
+
+\section{Résultats avec le contrôleur {\tt CtrlVV}}
+\subsection{Calcul d'un contrôleur}
+\subsubsection{Avec 0 défaillance (0.5 point)}
+\input{LaTeX/System0FCtrlVV.tex}
+\paragraph{Interprétation des résultats}
+% A COMPLETER
+
+\subsubsection{Avec 1 défaillance (0.5 point)}
+\input{LaTeX/System1FCtrlVV.tex}
+\paragraph{Interprétation des résultats}
+% A COMPLETER
+
+\subsubsection{Avec 2 défaillances (0.5 point)}
+\input{LaTeX/System2FCtrlVV.tex}
+\paragraph{Interprétation des résultats}
+% A COMPLETER
+
+\subsubsection{Avec 3 défaillances (0.5 point)}
+\input{LaTeX/System3FCtrlVV.tex}
+\paragraph{Interprétation des résultats}
+% A COMPLETER
+
+\subsection{Bilan avec le contrôleur CtrlVV (1 point)}
+% A COMPLETER
+
+\section{Une première optimisation des contrôleurs pour améliorer le débit aval}
+\subsection{Une optimisation basée sur les priorités (1 point)}
+\small{\lstinputlisting{ControleursOpt/Optimisation.alt}}
+% A COMPLETER en expliquant en quoi consiste l'optimisation mise en place.
+
+\subsection{Calcul des contrôleurs optimisés avec {\tt CtrlVV}}
+\paragraph{Avec 0 défaillance}\ \\
+\input{LaTeX/System0FCtrlVV_opt.tex}
+
+\paragraph{Avec 1 défaillance}\ \\
+\input{LaTeX/System1FCtrlVV_opt.tex}
+
+\paragraph{Avec 2 défaillances}\ \\
+\input{LaTeX/System2FCtrlVV_opt.tex}
+
+\paragraph{Avec 3 défaillances}\ \\
+\input{LaTeX/System3FCtrlVV_opt.tex}
+
+\subsection{Bilan avec la première optimisation du contrôleur CtrlVV (1 point)}
+% A COMPLETER
+
+\section{Une deuxième optimisation (3 points)}
+Il est possible d'obtenir de meilleurs résultats que les précédents par au moins deux façons.
+\begin{enumerate}
+\item En utilisant un meilleur ordre pour les priorités entre événements.
+\item En introduisant cet objectif dans le système de calcul de point fixe des actions du contrôleur.
+\end{enumerate}
+
+Vous devez proposer une des deux optimisations conduisant à une solution dans laquelle le débit de la vanne aval est le moins souvent possible décrémenter, voire jamais. Pour cela, vous pouvez~:
+\begin{itemize}
+\item Meilleur ordre sur les événements.
+  \begin{enumerate}
+  \item Modifier le fichier \texttt{ControleursOpt/Optimisation.alt}.
+  \item Faites \texttt{make}.
+  \item Quand vos résultats sont satisfaisants, notez les, puis copiez votre fichier dans \texttt{ControleursOpt/Optimisation-2.alt}.
+  \item Remettez le fichier \texttt{ControleursOpt/Optimisation.alt} d'origine.
+  \item Faites \texttt{make}.
+  \end{enumerate}
+\item Meilleur système d'équations au point fixe.
+  \begin{enumerate}
+  \item Modifier le fichier \texttt{Spec/System.spe}.
+  \item Faites \texttt{make}.
+  \item Quand vos résultats sont satisfaisants, notez les, puis copiez votre fichier dans \texttt{Spec/System-2.spe}.
+  \item Remettez le fichier \texttt{Spec/System.spe} d'origine.
+  \item Faites \texttt{make}.
+  \end{enumerate}
+\end{itemize}
+
+\paragraph{Le nouvel ordre}\ \\
+\small{\lstinputlisting{ControleursOpt/Optimisation-2.alt}
+% A COMPLETER en décrivant les résultats obtenus
+
+\paragraph{Le nouveau système d'équations}\ \\
+\small{\lstinputlisting[texcl]{Spec/System-2.spe}}
+% A COMPLETER en décrivant les résultats obtenus
+
+\section{Conclusion sur la synthèse de contrôleur (1 point)}
+% A COMPLETER
+
+\end{document}

@@ -1,0 +1,8 @@
+with Valve, ValveVirtual do
+  dot(any_s, any_t - self_epsilon) > 'Graphs/$NODENAME.dot';
+  modes() > 'Graphs/$NODENAME-modes.dot';
+  quot() > 'Graphs/$NODENAME-quot.dot';
+done
+with SystemNbPannesFNomDuControleur do
+  dot(any_s, any_t - self_epsilon) > 'Graphs/$NODENAME.dot';
+done

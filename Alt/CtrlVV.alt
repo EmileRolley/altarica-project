@@ -1,0 +1,49 @@
+node CtrlVV
+  /* Virtual valves to simulate real valves in order to discover failures 
+  */
+  sub    V : ValveVirtual[3];
+  /* Controller observations 
+  */
+  flow   rate : [0,2][3];
+         level : [0,nbSensors];
+  assert V[0].rateReal = rate[0];
+         V[1].rateReal = rate[1];
+         V[2].rateReal = rate[2];
+  /* The 27 commands of the controller
+  * d for dec, i for inc and n for nop
+  */
+  event ddd, ddi, ddn, did, dii, din, dnd, dni, dnn,
+        idd, idi, idn, iid, iii, iin, ind, ini, inn,
+	ndd, ndi, ndn, nid, nii, nin, nnd, nni, nnn;
+  trans true |- ddd, ddi, ddn, did, dii, din, dnd, dni, dnn,
+                idd, idi, idn, iid, iii, iin, ind, ini, inn,
+	        ndd, ndi, ndn, nid, nii, nin, nnd, nni, nnn
+		-> ;
+  sync  <ddd, V[0].dec, V[1].dec, V[2].dec>;
+        <ddi, V[0].dec, V[1].dec, V[2].inc>;
+        <ddn, V[0].dec, V[1].dec>;
+        <did, V[0].dec, V[1].inc, V[2].dec>;
+        <dii, V[0].dec, V[1].inc, V[2].inc>;
+        <din, V[0].dec, V[1].inc>;
+        <dnd, V[0].dec, V[2].dec>;
+        <dni, V[0].dec, V[2].inc>;
+        <dnn, V[0].dec>;
+        <idd, V[0].inc, V[1].dec, V[2].dec>;
+        <idi, V[0].inc, V[1].dec, V[2].inc>;
+        <idn, V[0].inc, V[1].dec>;
+        <iid, V[0].inc, V[1].inc, V[2].dec>;
+        <iii, V[0].inc, V[1].inc, V[2].inc>;
+        <iin, V[0].inc, V[1].inc>;
+        <ind, V[0].inc, V[2].dec>;
+        <ini, V[0].inc, V[2].inc>;
+        <inn, V[0].inc>;
+        <ndd, V[1].dec, V[2].dec>;
+        <ndi, V[1].dec, V[2].inc>;
+        <ndn, V[1].dec>;
+        <nid, V[1].inc, V[2].dec>;
+        <nii, V[1].inc, V[2].inc>;
+        <nin, V[1].inc>;
+        <nnd, V[2].dec>;
+        <nni, V[2].inc>;
+        <nnn>;
+edon

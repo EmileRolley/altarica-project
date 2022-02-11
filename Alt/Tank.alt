@@ -1,0 +1,16 @@
+node Tank
+  state level : [0,nbSensors] : public;
+  init  level := nbSensors/2;
+  flow  input : [0,4];
+        output : [0,2];
+  event time;
+  trans input>output |- time -> level := level + 1;
+        input<output |- time -> level := level - 1;
+        input=output & input=0 |- time -> ;
+        input=output & input>0 |- time -> level := level - 1;
+        input=output & input>0 |- time -> ;
+        input=output & input>0 |- time -> level := level + 1;
+	/* To avoid deadlocks */
+	input>output & level=nbSensors |- time -> ;
+	input<output & level=0 |- time -> ;
+edon

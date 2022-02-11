@@ -1,0 +1,28 @@
+L'archive du sujet contient :
+
+0/ Les sources latex du cahier des charges, du sujet et d'un squelette de rapport.
+1/ Le pdf du sujet du projet.
+2/ Ce ficher TODO
+3/ Des sources AltaRica dans le répertoire Alt
+4/ Un fichier System.spe de spécification pour le calcul des controleurs dans le répertoire Spec
+
+
+Pour votre étude, vous pouvez utiliser au choix les commandes :
+ $> make
+ $> altarica-studio <liste de fichiers>
+ $> arc -b <liste de fichiers>
+
+L'option "-b" signifie "-batch" et vous redonne "la main" aussitôt les calculs terminés.
+
+Si vous utiliser "make" (ce qui est conseillé) les controleurs générés et les résultats seront mis dans les répertoires :
+ - Controleurs : pour les fichiers AltaRica générés.
+ - ControleursOpt : pour les fichiers AltaRica générés et optimisés.
+ - Res : pour les propriétés.
+et les deux fichiers suivants seront générés. 
+ - rapport.pdf
+ - FD-2017-2018-M1-CC-rapport.tgz
+
+
+Pour le rapport, vous devez compléter le fichier "rapport.tex", les questions sont indiquées en commentaires.
+
+Le fichier à transmettre par mail est le suivant : FD-2017-2018-M1-CC-rapport.tgz

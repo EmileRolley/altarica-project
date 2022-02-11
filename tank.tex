@@ -1,0 +1,90 @@
+\section{Cahier des charges}
+
+Le système que l'on souhaite concevoir est composé~:
+\begin{itemize}
+\item d'un réservoir contenant {\bf toujours} suffisamment d'eau pour alimenter l'exploitation,
+\item d'une cuve,
+\item de deux canalisations parfaites amont reliant le réservoir à la cuve, et permettant d'amener l'eau à la cuve,
+\item d'une canalisation parfaite aval permettant de vider l'eau de la cuve,
+\item chaque canalisation est équipée d'une vanne commandable, afin de réguler l'alimentation et la vidange de la cuve,
+\item d'un contrôleur.
+\end{itemize}
+
+\subsection{Détails techniques}
+
+\subsubsection{La vanne}
+Les vannes sont toutes de même type, elles possèdent trois niveaux de débits correspondant à trois diamètres d'ouverture~: 0 correspond à la vanne fermée, 1 au diamètre intermédiaire et 2 à la vanne complètement ouverte. Les vannes sont commandables par les deux instructions {\tt inc} et {\tt dec} qui respectivement augmente et diminue l'ouverture. Malheureusement, la vanne est sujet à défaillance sur sollicitation, auquel cas le système de commande devient inopérant, la vanne est désormais pour toujours avec la même ouverture.
+
+\subsubsection{La Cuve}
+Elle est munie de $nbSensors$ capteurs (au moins quatre) situés à $nbSensors$ hauteurs qui permettent de délimiter $nbSensors+1$ zones. La zone 0 est comprise entre le niveau 0 et le niveau du capteur le plus bas; la zone 1 est comprise entre ce premier capteur et le second, et ainsi de suite.
+
+Elle possède en amont un orifice pour la remplir limité à un débit de 4, et en aval un orifice pour la vider limité à un débit de 2.  
+
+\subsubsection{Le contrôleur}
+Il commande les vannes avec les objectifs suivants ordonnés par importance~:
+\begin{enumerate}
+\item Le système ne doit pas se bloquer, et le niveau de la cuve ne doit jamais atteindre les zones 0 ou $nbSensors$.
+\item Le débit de la vanne aval doit être le plus important possible.
+\end{enumerate}
+
+On fera également l'hypothèse que les commandes ne prennent pas de temps, et qu'entre deux pannes et/ou cycle {\em temporel}, le contrôleur à toujours le temps de donner au moins un ordre. Réciproquement, on fera l'hypothèse que le système à toujours le temps de réagir entre deux commandes.
+
+\subsubsection{Les débits}
+Les règles suivantes résument l'évolution du niveau de l'eau dans la cuve~:
+\begin{itemize}
+\item Si $(amont > aval)$ alors au temps suivant, le niveau aura augmenté d'une unité.
+\item Si $(amont < aval)$ alors au temps suivant, le niveau aura baissé d'une unité.
+\item Si $(amont = aval = 0)$ alors au temps suivant, le niveau n'aura pas changé.
+\item Si $(amont = aval > 0)$ alors au temps suivant, le niveau pourra~:
+  \begin{itemize}
+  \item avoir augmenté d'une unité,
+  \item avoir baissé d'une unité,
+  \item être resté le même.
+  \end{itemize}
+\end{itemize}
+
+\section{L'étude}
+
+\subsection{Rappel méthodologique}
+Comme indiqué en cours, le calcul par point fixe du contrôleur est exact, mais l'opération de projection effectuée ensuite peut perdre de l'information et générer un contrôleur qui n'est pas satisfaisant. Plus précisemment, le contrôleur \altarica\ généré~:
+\begin{itemize}
+\item ne garanti pas la non accessibilité des \emph{Situations Redoutées}.
+\item ne garanti pas l'absence de \emph{nouvelles situations de blocages}.
+\end{itemize}
+
+Dans le cas ou il existe toujours \emph{des situations de blocages ou redoutées}, vous pouvez au choix~:
+\begin{enumerate}
+\item Corriger manuellement le contrôleur calculé (sans doute très difficile).
+\item Itérer le processus du calcul du contrôleur jusqu'à stabilisation du résultat obtenu. 
+  \begin{itemize}
+  \item Si le contrôleur obtenu est sans blocage et sans situation redoutée, il est alors correct.
+  \item Si le contrôleur obtenu contient toujours des blocages ou des situations redoutées, c'est que le contrôleur initial n'est pas assez performant, mais rien ne garanti que l'on soit capable de fournir ce premier contrôleur suffisemment performant.
+  \end{itemize}
+\end{enumerate}
+
+{\bf Remarque} : Pour vos calculs, vous pouvez utiliser au choix les commandes~:
+\begin{itemize}
+\item {\tt altarica-studio xxx.alt xxx.spe}
+\item {\tt arc -b xxx.alt xxx.spe}
+\item {\tt make} pour utiliser le fichier GNUmakefile fourni.
+\end{itemize}
+
+\subsection{Le travail a réaliser}
+L'étude consiste à étudier le système suivant trois paramètres~:
+\begin{enumerate}
+\item $nbFailures$~: une constante qui est une borne pour le nombre de vannes pouvant tomber en panne.
+\item Le contrôleur initial qui peut être soit {\tt Ctrl}, soit {\tt CtrlVV}.
+\item Une éventuelle optimisation pour améliorer le débit aval.
+\end{enumerate}
+
+Les questions auxquelles vous devez répondre sont dans le fichier {\tt fichier rapport.tex}. Elles correspondent aux interrogations suivantes~:
+\begin{enumerate}
+\item Est-il possible de contrôler en évitant les blocages et les situations critiques ?
+\item Si oui, donnez quelques caractéristiques de ce contrôleur, si non, expliquez pourquoi.
+\item Est-il possible de contrôler en optimisant le débit aval et en évitant les blocages et les situations critiques ?
+\item Si oui, donnez quelques caractéristiques de ce contrôleur, si non, expliquez pourquoi.
+\end{enumerate}
+
+Vous écrirez vos réponses dans ce même fichier.
+
+

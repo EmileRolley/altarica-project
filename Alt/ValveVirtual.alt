@@ -1,0 +1,16 @@
+/* A  virtual valse is use by the controller :
+*  - to simulate a perfect valve
+*  - to stop the use of a valve when it is stuck
+*/
+node ValveVirtual
+  state rate : [0,2] : public;
+  /* information given via the controller
+  *  rate different from rateReal means that this valve is stuck.
+  *  so there is no need to use it any more 
+  */
+  flow  rateReal : [0,2];
+  init  rate := 0;
+  event dec, inc;
+  trans rate=rateReal |- dec -> rate := rate - 1;
+        rate=rateReal |- inc -> rate := rate + 1;
+edon

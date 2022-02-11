@@ -1,0 +1,48 @@
+with System3FCtrlVV3F3I_Opt do
+  deadlock := any_s - src(any_t - self_epsilon);
+  notResettable := any_s -coreach(initial,any_t);
+  /* output */
+  out0 := any_s & [V[2].rate=0];
+  out1 := any_s & [V[2].rate=1];
+  out2 := any_s & [V[2].rate=2];
+  dec21 := any_t & label V[2].dec & rsrc(out2);
+  dec10 := any_t & label V[2].dec & rsrc(out1);
+  /* Niveaux critiques et Situations redoutees */
+  NC := any_s & [T.level=0 | T.level=nbSensors];
+  SR := deadlock | NC;
+  EPerdu := any_s - SR;
+  CGagne := any_s - SR;
+  /* systeme d'equation au point fixe
+  * CGagnant = CGagne & src(CCoupGagnant)
+  * CCoupGagnant = CCoup & rtgt(EPerdant)
+  * EPerdant = EPerdu & (src(ECoupPerdant) - src(ECoupNonPerdant))
+  * ECoupPerdant = ECoup & rtgt(CGgagnant)
+  * ECoupNonPerdant = ECoup & rtgt(any_s - CGagnant)
+  */
+  CCoup := any_t & label cmd;
+  ECoup := any_t & label env;
+  CCoupGagnant -= CCoup & rtgt(EPerdu & (src(ECoup & rtgt(CGagne & src(CCoupGagnant))) - src(ECoup & rtgt(any_s - (CGagne & src(CCoupGagnant))))));
+  /* Controller projection */
+  /* Syntax and semantic of the "project" command
+  * param 1 : les configurations projetees
+  * param 2 : les transitions projetees
+  *  - arg1 : projection existentielle
+  *  - arg2 : projection universelle
+  * param 3 : nom du noeud AltaRica genere
+  * param 4 : simplification ou non des expressions booleennes
+  * param 5 (optionel) : noeud de la hierarchie servant a la projection
+  */  
+  /* Universal projection is use */
+  project(any_s, (empty_t,CCoupGagnant), 'CtrlVV3F4I_Opt', true,C)
+	> 'Controleurs/CtrlVV3F4I_Opt.alt';
+  /* record results */
+  show(any_s, any_t, deadlock, NC, SR , out0, out1, out2, dec21, dec10, CCoupGagnant) > 'Res/$NODENAME.res';
+done
+with Valve, ValveVirtual do
+  dot(any_s, any_t - self_epsilon) > 'Graphs/$NODENAME.dot';
+  modes() > 'Graphs/$NODENAME-modes.dot';
+  quot() > 'Graphs/$NODENAME-quot.dot';
+done
+with System3FCtrlVV3F3I_Opt do
+  dot(any_s, any_t - self_epsilon) > 'Graphs/$NODENAME.dot';
+done
