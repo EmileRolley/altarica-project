@@ -35,11 +35,38 @@ Synthèse (assistée) d'un contrôleur du niveau d'une cuve}
 Le rapport est sur 20 points.
 
 \section{Processus}
+
 \subsection{Rôle du fichier {\tt GNUmakefile} (1.5 points)}
-% A COMPLETER en expliquant les enchainements des calculs effectués.
+
+\begin{itemize}
+  \item lignes 1 à 87 : déclaration des variables globales nécessaires pour l'exécution des règles.
+  \item règle \texttt{all} : exécute les règles \texttt{sources} et
+    \texttt{tank.time} et compile les cibles
+    \begin{itemize}
+      \item \texttt{sujet.pdf}, \texttt{FD-2021-2022-M1-CC-sujet.tgz},
+      \item \texttt{rapport-<user>.pdf}, \texttt{FD-2021-2022-M1-CC-rapport-<user>.tgz},
+      \item \texttt{corrige.pdf} et \texttt{FD-2021-2022-M1-CC-corrige.tgz}.
+    \end{itemize}
+  \item règle \texttt{sources} : exécute \texttt{make all} pour les
+    sous-répertoires \texttt{Alt} et \texttt{Spec}.
+  \item règle \texttt{tank.time} : pour chaque controleur \texttt{Ctrl} et \texttt{CtrlVV},
+    ainsi que pour chaque nombre de défaillances, est créé un fichier \texttt{tank.alt}.
+    Ce fichier est l'aggrégation de l'ensembles des fichiers AltaRica du répertoire \texttt{Alt}.
+    TODO:
+    Elle termine en exécutant la commande \texttt{make} dans tous les
+    sous-répertoires : \texttt{Res} \texttt{Controleurs} \texttt{Graphs}
+    \texttt{LaTeX}.
+\end{itemize}
 
 \subsection{Rôle de la constante {\tt nbFailures} et de l'assertion associée (0.5 point)}
-% A COMPLETER en expliquant le rôle de la constante.
+
+La constante \texttt{nbFailures} corresponds au nombre de maximum de vannes pouvant tombées
+en pannes simultanément (\texttt{Valve.stucked == 1}).
+Cette condition est assurée par l'assertion :
+\begin{verbatim}
+# ligne 154 tank.alt
+  nbFailures >= (V[0].stucked + V[1].stucked + V[2].stucked);
+\end{verbatim}
 
 \section{Résultats avec le contrôleur initial {\tt Ctrl}}
 \subsection{Calcul d'un contrôleur}
@@ -73,7 +100,8 @@ Le rapport est sur 20 points.
 % A COMPLETER en expliquant sa sémantique et son rôle.
 
 \subsection{Rôle du composant {\tt CtrlVV} (4 points)}
-% A COMPLETER en expliquant les mécanismes mis en oeuvre, leurs rôles et les avantages de ce contrôleur par rapport au précédent CtrlVV.
+% A COMPLETER en expliquant les mécanismes mis en oeuvre, leurs rôles et les
+% avantages de ce contrôleur par rapport au précédent CtrlVV.
 
 \section{Résultats avec le contrôleur {\tt CtrlVV}}
 \subsection{Calcul d'un contrôleur}
@@ -149,7 +177,7 @@ Vous devez proposer une des deux optimisations conduisant à une solution dans l
 \end{itemize}
 
 \paragraph{Le nouvel ordre}\ \\
-\small{\lstinputlisting{ControleursOpt/Optimisation-2.alt}
+\small{\lstinputlisting{ControleursOpt/Optimisation-2.alt}}
 % A COMPLETER en décrivant les résultats obtenus
 
 \paragraph{Le nouveau système d'équations}\ \\

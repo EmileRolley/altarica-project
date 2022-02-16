@@ -7,7 +7,9 @@ Project for the course Conception Formelle
 ### Processus
 
 * [ ] Rôle Makefile
-* [ ] Rôle de la constante `nbFailures`.
+	* [x] Autres règles
+	* [ ] Finir d'expliquer la règle `tank.time`
+* [x] Rôle de la constante `nbFailures`.
 
 ### Résultat du contrôleur initial `Ctrl`
 
