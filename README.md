@@ -6,12 +6,16 @@ Project for the course Conception Formelle
 
 ### Processus
 
+> Gilles
+
 * [ ] Rôle Makefile
 	* [x] Autres règles
 	* [ ] Finir d'expliquer la règle `tank.time`
 * [x] Rôle de la constante `nbFailures`.
 
 ### Résultat du contrôleur initial `Ctrl`
+
+> Gilles
 
 > Interprétation, c'est-à-dire, expliquer pour chaque
 > ensemble à quoi cela corresponds en terme de propriétés, etc...
@@ -26,11 +30,15 @@ Project for the course Conception Formelle
 
 ### Construction d'un contrôleur initial plus performant
 
+> Gilles
+
 * [ ] Expliquer la sémantique et le rôle du composant `ValveVirtual`
 * [ ] Expliquer les mécanismes mis en oeuvre, leurs rôles et les avantages de
 ce contrôleur par rapport au précédent `CtrlVV`.
 
 ### Résultat du contrôleur initial `CtrlVV`
+
+> Gilles
 
 > Interprétation, c'est-à-dire, expliquer pour chaque
 > ensemble à quoi cela corresponds en terme de propriétés, etc...
@@ -45,6 +53,8 @@ ce contrôleur par rapport au précédent `CtrlVV`.
 
 ### Une première optimisation des contrôleurs pour améliorer le débit aval
 
+> Emile
+
 * [ ] Expliquer en quoi consiste l'optimisation mise en place
 * [ ] Inteprétation des résultats avec 0 défaillances
 * [ ] Inteprétation des résultats avec 1 défaillances
@@ -56,6 +66,8 @@ ce contrôleur par rapport au précédent `CtrlVV`.
 
 ### Une deuxième optimisation
 
+> Emile
+
 * [ ] Implémenter une des optimisation proposée pour `CtrlVV`
 * [ ] Décrire les résultats obtenus après optimisation
 
@@ -64,5 +76,6 @@ ce contrôleur par rapport au précédent `CtrlVV`.
 
 ### Conclusion
 
-* [ ] Ecrire une conclusion finale sur la synthèse de contrôleur.
+> Emile
 
+* [ ] Ecrire une conclusion finale sur la synthèse de contrôleur.
