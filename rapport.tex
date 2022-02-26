@@ -24,7 +24,7 @@ Synthèse (assistée) d'un contrôleur du niveau d'une cuve}
 
 \date{}
 
-\author{Nom1 \and Nom2 \and Nom3}
+\author{Emile ROLLEY \and Gilles SOUTON}
 
 \maketitle
 
@@ -67,6 +67,11 @@ Cette condition est assurée par l'assertion :
 # ligne 154 tank.alt
   nbFailures >= (V[0].stucked + V[1].stucked + V[2].stucked);
 \end{verbatim}
+
+Par exemple, si les vannes $0$ et $1$ tombent en pannes :
+$$
+V[0].stucked + V[1].stucked + V[2].stucked = 1 + 1 + 0 = 2
+$$
 
 \section{Résultats avec le contrôleur initial {\tt Ctrl}}
 \subsection{Calcul d'un contrôleur}
@@ -131,7 +136,13 @@ Cette condition est assurée par l'assertion :
 \section{Une première optimisation des contrôleurs pour améliorer le débit aval}
 \subsection{Une optimisation basée sur les priorités (1 point)}
 \small{\lstinputlisting{ControleursOpt/Optimisation.alt}}
-% A COMPLETER en expliquant en quoi consiste l'optimisation mise en place.
+
+L'optimisation mise en place défini un ordre de priorité sur les différentes
+actions sur les vannes. En particulier, sur la vanne aval : $inc > nop > dec$.
+Cela forcera donc à choisir les actions maximisant le débit de la vanne aval,
+en effet, l'action incrémentant le débit est prioritaire par rapport aux deux
+autres et l'action de ne pas modifier le débit est prioritaire à celle le
+diminuant.
 
 \subsection{Calcul des contrôleurs optimisés avec {\tt CtrlVV}}
 \paragraph{Avec 0 défaillance}\ \\
@@ -147,7 +158,25 @@ Cette condition est assurée par l'assertion :
 \input{LaTeX/System3FCtrlVV_opt.tex}
 
 \subsection{Bilan avec la première optimisation du contrôleur CtrlVV (1 point)}
-% A COMPLETER
+
+Sans défaillance, tous les objectifs énnoncés pour le contrôleur sont respectés :
+\begin{itemize}
+  \item $SR = 0$, assure que le system ne peut pas se bloquer ($deadlock = 0$)
+    et que le niveau de la cuve ne dépasse jamais les niveau critiques ($NC =
+    0$),
+  \item $out2 > out1 > out0$, démontre que le débit de la vanne aval est
+    maximisé, c'est accentué par le fait que le débit n'est décrementé qu'une
+    seule fois ($dec21 = 1 \wedge dec10 = 0$). (TODO: est-ce suffisant pour assurer que le débit aval est maximisé ?)
+\end{itemize}
+
+
+Avec une défaillance, tous l'objectif prioritaire énnoncé pour le contrôleur est respecté car $SR = 0$, cependant,
+pour l'optimisation du débit aval : TODO: comprendre CCoupGagnant.
+
+A partir de 2 défaillances, le système ne se bloque pas et la niveau de la cuve
+ne dépasse pas les niveaux critiques ($SR = 0$), mais cela à un coup car le
+système ne possède plus que deux états ($any\_s = 2$).
+
 
 \section{Une deuxième optimisation (3 points)}
 Il est possible d'obtenir de meilleurs résultats que les précédents par au moins deux façons.
