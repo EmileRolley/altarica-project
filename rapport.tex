@@ -102,7 +102,20 @@ $$
 \subsection{Rôle du composant {\tt ValveVirtual}(2 points)}
 \includegraphics[height=.2\textheight,width=.5\textwidth]{Graphs/Valve-modes.pdf}
 \includegraphics[height=.2\textheight,width=.5\textwidth]{Graphs/ValveVirtual-modes.pdf}
-% A COMPLETER en expliquant sa sémantique et son rôle.
+
+Le composant \texttt{ValveVirtual} est la représentation en droit d'une valve
+physique. Elle permet donc de simuler le fonctionnement et l'évolution d'une
+valve \textit{parfaite}, c'est-à-dire, sans contrainte de l'environnement :
+elle ne peut donc pas tomber en panne.
+
+Sa sémantique est la suivante :
+\begin{itemize}
+  \item si les variables \texttt{rate} et \texttt{reateReal} coincïdent, alors l'évènement \texttt{dec} (resp. \texttt{inc})
+    permet de décrementer (resp. incrémenter) la valeur de \texttt{rate}.
+  \item sinon, dès lors que les variables \texttt{rate} et \texttt{rateReal} se
+    désynchronisent, cela signifie que la valve physique est tombée en panne : la valve virtuelle
+    n'est alors plus utilisable.
+\end{itemize}
 
 \subsection{Rôle du composant {\tt CtrlVV} (4 points)}
 % A COMPLETER en expliquant les mécanismes mis en oeuvre, leurs rôles et les
@@ -136,7 +149,6 @@ $$
 \section{Une première optimisation des contrôleurs pour améliorer le débit aval}
 \subsection{Une optimisation basée sur les priorités (1 point)}
 \small{\lstinputlisting{ControleursOpt/Optimisation.alt}}
-
 L'optimisation mise en place défini un ordre de priorité sur les différentes
 actions sur les vannes. En particulier, sur la vanne aval : $inc > nop > dec$.
 Cela forcera donc à choisir les actions maximisant le débit de la vanne aval,
@@ -166,7 +178,8 @@ Sans défaillance, tous les objectifs énnoncés pour le contrôleur sont respec
     0$),
   \item $out2 > out1 > out0$, démontre que le débit de la vanne aval est
     maximisé, c'est accentué par le fait que le débit n'est décrementé qu'une
-    seule fois ($dec21 = 1 \wedge dec10 = 0$). (TODO: est-ce suffisant pour assurer que le débit aval est maximisé ?)
+    seule fois ($dec21 = 1 \wedge dec10 = 0$).
+    (TODO: est-ce suffisant pour assurer que le débit aval est maximisé ?)
 \end{itemize}
 
 
