@@ -8,9 +8,9 @@ Project for the course Conception Formelle
 
 > Gilles
 
-* [ ] Rôle Makefile
+* [x] Rôle Makefile
 	* [x] Autres règles
-	* [ ] Finir d'expliquer la règle `tank.time`
+	* [x] Finir d'expliquer la règle `tank.time`
 * [x] Rôle de la constante `nbFailures`.
 
 ### Résultat du contrôleur initial `Ctrl`
@@ -20,9 +20,9 @@ Project for the course Conception Formelle
 > Interprétation, c'est-à-dire, expliquer pour chaque
 > ensemble à quoi cela corresponds en terme de propriétés, etc...
 
-* [ ] Inteprétation des résultats avec 0 défaillances
-* [ ] Inteprétation des résultats avec 1 défaillances
-* [ ] Inteprétation des résultats avec 2 défaillances
+* [x] Inteprétation des résultats avec 0 défaillances
+* [x] Inteprétation des résultats avec 1 défaillances
+* [x] Inteprétation des résultats avec 2 défaillances
 * [ ] Inteprétation des résultats avec 3 défaillances
 * [ ] Bilan avec le contrôleur initial
 	> Déterminer les limites du contrôleur (à partir de quand ça crash,

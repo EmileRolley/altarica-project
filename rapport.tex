@@ -49,13 +49,22 @@ Le rapport est sur 20 points.
     \end{itemize}
   \item règle \texttt{sources} : exécute \texttt{make all} pour les
     sous-répertoires \texttt{Alt} et \texttt{Spec}.
-  \item règle \texttt{tank.time} : pour chaque controleur \texttt{Ctrl} et \texttt{CtrlVV},
-    ainsi que pour chaque nombre de défaillances, est créé un fichier \texttt{tank.alt}.
-    Ce fichier est l'aggrégation de l'ensembles des fichiers AltaRica du répertoire \texttt{Alt}.
-    TODO:
-    Elle termine en exécutant la commande \texttt{make} dans tous les
-    sous-répertoires : \texttt{Res} \texttt{Controleurs} \texttt{Graphs}
-    \texttt{LaTeX}.
+  \item règle \texttt{tank.time} 
+      \begin{enumerate}
+          \item Pour chaque controleur \texttt{Ctrl} et \texttt{CtrlVV}, est créé un fichier \texttt{tank.alt}. 
+              Ce fichier est l'aggrégation de l'ensembles des fichiers AltaRica du répertoire \texttt{Alt}.
+          \item On cacule ensuite un controleur a partir du fichier \texttt{tank.alt} et des specifications 
+              \texttt{System.spe}.
+          \item On itère ensuite dans le but de calculer un nouveau controleur et on le compare 
+              avec l'ancien controlleur.
+              Si les controleurs diffèrent on continue alors les itérations. 
+              Sinon si il n'y a pas de différence on s'arrête.
+          \item On reitère les operations ci dessus en incrémentant le nombres de pannes
+              pour chaque controlleur tout en incrémentant le nombre de défaillance dans le système.
+          \item Enfin on termine en exécutant la commande \texttt{make} dans tous les
+              sous-répertoires : \texttt{Res} \texttt{Controleurs} \texttt{Graphs}
+              \texttt{LaTeX}.
+      \end{enumerate}
 \end{itemize}
 
 \subsection{Rôle de la constante {\tt nbFailures} et de l'assertion associée (0.5 point)}
@@ -78,22 +87,47 @@ $$
 \subsubsection{Avec 0 défaillance (0.5 point)}
 \input{LaTeX/System0FCtrl.tex}
 \paragraph{Interprétation des résultats}
-% A COMPLETER
+Pour rappel les situations redoutés sont l'union des états critiques et des deadlock 
+\textfff{SR := deadlock | NC;}
+\begin{itemize}
+    \item Avec 0 défaillance dans le systèmes on peut voir que le premier controlleur calculé
+contient des états de situations redoutés.
+    \item Après une projection le nouveau controlleur généré ne contient plus de situations redoutés.
+    \item A la deuxième itération il n'y a plus de changement pour les controleurs obtenus,
+les resultats sont stables le controleur est alors correct.
+\end{itemize}
 
 \subsubsection{Avec 1 défaillance (0.5 point)}
 \input{LaTeX/System1FCtrl.tex}
 \paragraph{Interprétation des résultats}
-% A COMPLETER
+\begin{itemize}
+    \item Avec 1 défaillance le controleur initial contient 329 états redoutés.
+    \item Après une première itération le controleur calculé à diminué considérablement les états critiques 
+        et situations redoutés respectivement à 69 et 93.
+        En revanche ce controlleur à introduit des deadlock dans le système...
+    \item À la deuxième itération le système contient toujours autant d'etats critiques et de situations redoutés.
+        et 3 deadlock en plus.
+    \item A la troisième itération le système n'a pas évolué les resultats se sont stabilisé.
+          Ce controlleur n'est pas correct, le controlleur n'est peut-être pas assez performant. 
+\end{itemize}
 
 \subsubsection{Avec 2 défaillances (0.5 point)}
 \input{LaTeX/System2FCtrl.tex}
 \paragraph{Interprétation des résultats}
-% A COMPLETER
+\begin{itemize}
+    \item La controleur initial contient 551 états redoutés.
+    \item En itérant le processus de calcul l'etat se stabilise à la 4ème itération, cependant
+        le controleur n'est pas correct il contient 107 états critiques, 270 situations redoutés.
+\end{itemize}
 
 \subsubsection{Avec 3 défaillances (0.5 point)}
 \input{LaTeX/System3FCtrl.tex}
 \paragraph{Interprétation des résultats}
-% A COMPLETER
+\begin{itemize}
+    \item La controleur initial contient 617 situations redoutés.
+    \item En itérant le processus de calcul l'etat se stabilise à la 3ème itération, cependant
+        le controleur n'est pas correct il contient 27 situations redoutés.
+\end{itemize}
 
 \subsection{Bilan avec le contrôleur initial (1 point)}
 % A COMPLETER
