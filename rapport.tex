@@ -51,12 +51,12 @@ Le rapport est sur 20 points.
     sous-répertoires \texttt{Alt} et \texttt{Spec}.
   \item règle \texttt{tank.time} :
       \begin{enumerate}
-          \item Pour chacun des controleurs (\texttt{Ctrl} et \texttt{CtrlVV})
+          \item Pour chacun des contrôleurs (\texttt{Ctrl} et \texttt{CtrlVV})
             et pour chaque nombre de défaillance (de 0 à 3), est
-            créé un fichier \texttt{tank.alt} . Ce fichier est l'aggrégation de
-            l'ensembles des fichiers AltaRica du répertoire \texttt{Alt}.
+            créé un fichier \texttt{tank.alt} . Ce fichier est l'agrégation de
+            l'ensemble des fichiers AltaRica du répertoire \texttt{Alt}.
           \item Les fichiers \texttt{test.alt} et \texttt{test.spe} sont créés
-            en remplaçant les différentes \textit{variables} des fichiers
+            en remplaçant les différentes \textit{placeholders} des fichiers
             \texttt{tank.alt} et \texttt{test.spe} par leurs valeurs
             correspondantes -- nombre de pannes, nom du contrôleur, etc...
           \item Les résultats de la commande \texttt{arc} sont ensuite écrits
@@ -64,7 +64,7 @@ Le rapport est sur 20 points.
             Cette procédure est répétée jusqu'à stabilisation des résultats (ou
             5 fois maximum dans le cas échéant).
           \item Une fois stabilisé, les fichiers \texttt{test.alt} et
-            \texttt{test.spe} sont recréés et exécutéés mais en utilisant la
+            \texttt{test.spe} sont recréés et exécutées mais en utilisant la
             version optimisée du contrôleur courant.
           \item Finalement, la commande \texttt{make} est exécutée dans
             tous les sous-répertoires : \texttt{Res} \texttt{Controleurs}
@@ -87,17 +87,19 @@ $$
 V[0].stucked + V[1].stucked + V[2].stucked = 1 + 1 + 0 = 2
 $$
 
+l'assertion serait donc vérifiée pour $nbFailures >= 2$.
+
 \section{Résultats avec le contrôleur initial {\tt Ctrl}}
 \subsection{Calcul d'un contrôleur}
 \subsubsection{Avec 0 défaillance (0.5 point)}
 \input{LaTeX/System0FCtrl.tex}
 \paragraph{Interprétation des résultats}
 
-Sans défaillance, le contrôleur initial ne vérifie pas l'objectif principal à savoir que
-garantir la non accessibilité des situations redoutées ($SR > 0$).
+Sans défaillance, le contrôleur initial ne vérifie pas l'objectif principal à
+savoir : garantir la non accessibilité des situations redoutées ($SR > 0$).
 Cependant, après projection, ces situations ne sont plus accessible ($SR = 0$).
-De plus le débit de la vanne aval semble avoir été maximisée ($out2 > out1 > out0$), ce qui
-valide le second objectif.
+De plus le débit de la vanne aval semble avoir été maximisé ($out2 > out1 >
+out0$), ce qui valide le second objectif.
 
 La stabilisation est atteinte dès la deuxième itération.
 
@@ -170,11 +172,12 @@ du système est utilisée pour décrémenter ou incrémenter le débit d'une
 \texttt{Valve}, celui de la valve virtuelle du contrôleur \texttt{CtrlVV}
 correspondante est modifié de la même manière.
 
-Comme expliqué dans la section précédente, si une vanne \texttt{Valve} du système
-tombe en panne alors les commandes \texttt{dec} et \texttt{inc} n'auront aucun effet sur cette
-dernière, alors que pour la vanne virtuelle \texttt{ValveVirtual} l'effet sera
-quand même appliqué ce qui causera une désynchronisation de la variable de flux
-\texttt{rateReal} et celle d'état \texttt{rate}.
+Comme expliqué dans la section précédente, si une vanne \texttt{Valve} du
+système tombe en panne alors les commandes \texttt{dec} et \texttt{inc}
+n'auront aucun effet sur cette dernière, alors que pour la vanne virtuelle
+\texttt{ValveVirtual} l'effet sera quand même appliqué ce qui causera une
+désynchronisation de la variable de flux \texttt{rateReal} et celle d'état
+\texttt{rate}.
 
 Finalement, cela permet de \textit{signifier} au système qu'une panne est
 survenue et ainsi permettre d'optimiser le contrôleur lors de la projection.
@@ -216,14 +219,13 @@ comprends plus que deux états accessibles.
 
 \subsection{Bilan avec le contrôleur CtrlVV (1 point)}
 
-Comment attendu, le contrôleur \texttt{CtrlVV} permet d'améliorer la projection
+Comme attendu, le contrôleur \texttt{CtrlVV} permet d'améliorer le calcul
 du contrôleur et prenant en compte les cas de pannes, ainsi après stabilisation
 peut importe le nombre de défaillance, les situations redoutées sont évitées. A
 partir, de deux défaillances et une fois le calcul du contrôleur stabilisé il
 ne reste plus que deux états possibles, effet, si deux vannes tombent en pannes
 il faudra nécessairement fermer la troisième pour ne pas rentrer en zone
 critiques.
-
 
 \section{Une première optimisation des contrôleurs pour améliorer le débit aval}
 \subsection{Une optimisation basée sur les priorités (1 point)}
@@ -252,20 +254,20 @@ diminuant.
 
 \subsection{Bilan avec la première optimisation du contrôleur CtrlVV (1 point)}
 
-Sans défaillance, tous les objectifs énnoncés pour le contrôleur sont respectés :
+Sans défaillance, tous les objectifs énoncés pour le contrôleur sont respectés :
 \begin{itemize}
-  \item $SR = 0$, assure que le system ne peut pas se bloquer ($deadlock = 0$)
+  \item $SR = 0$, assure que le système ne peut pas se bloquer ($deadlock = 0$)
     et que le niveau de la cuve ne dépasse jamais les niveau critiques ($NC =
     0$),
-  \item $out2 > out1 > out0$, démontre que le débit de la vanne aval est
-    maximisé, c'est accentué par le fait que le débit n'est décrementé qu'une
+  \item $out2 > out1 > out0$, semble indiqué que le débit de la vanne aval est
+    maximisé, c'est accentué par le fait que le débit n'est décrémenté qu'une
     seule fois ($dec21 = 1 \wedge dec10 = 0$).
-    (TODO: est-ce suffisant pour assurer que le débit aval est maximisé ?)
 \end{itemize}
 
 
-Avec une défaillance, tous l'objectif prioritaire énnoncé pour le contrôleur est respecté car $SR = 0$, cependant,
-pour l'optimisation du débit aval : TODO: comprendre CCoupGagnant.
+Avec une défaillance, tous l'objectif prioritaire énoncé pour le contrôleur est
+respecté car $SR = 0$, cependant, il est plus difficile de savoir si le débit
+de la vanne aval est maximal.
 
 A partir de 2 défaillances, le système ne se bloque pas et la niveau de la cuve
 ne dépasse pas les niveaux critiques ($SR = 0$), mais cela à un coup car le
@@ -303,11 +305,25 @@ Vous devez proposer une des deux optimisations conduisant à une solution dans l
 \small{\lstinputlisting{ControleursOpt/Optimisation-2.alt}}
 % A COMPLETER en décrivant les résultats obtenus
 
+Pour maximiser le débit de la vanne aval il faut que la somme des débits des
+vannes en amonts soit égal à celui de la vanne aval, pour éviter que le niveau
+de la cuve ne se retrouve en zone critique car la cuve se viderait plus vite
+qu'elle ne se remplierait. En particulier, il faut que les deux vannes en amonts
+aient un débit de 1.
+
+Malheureusement, nous n'avons pas réussi définir un ordre sur les commandes
+permettant d'avoir une amélioration significative.
+
 \paragraph{Le nouveau système d'équations}\ \\
 \small{\lstinputlisting[texcl]{Spec/System-2.spe}}
 % A COMPLETER en décrivant les résultats obtenus
 
 \section{Conclusion sur la synthèse de contrôleur (1 point)}
-% A COMPLETER
+
+Le contrôleur \texttt{CtrlVV} permet de s'assurer que le système ne se bloquera
+pas et ne pourra pas se retrouver dans une situation critique même si cela peut
+entrainer une perte de fonctionnalités.
+Au contraire du contrôleur \texttt{Ctrl} qui ne garantit pas le premier
+objectif en cas de panne.
 
 \end{document}
