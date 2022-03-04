@@ -75,7 +75,7 @@ Le rapport est sur 20 points.
 \subsection{Rôle de la constante {\tt nbFailures} et de l'assertion associée (0.5 point)}
 
 La constante \texttt{nbFailures} corresponds au nombre de maximum de vannes
-pouvant tombées en pannes simultanément (\texttt{Valve.stucked == 1}). Cette
+pouvant tomber en pannes simultanément (\texttt{Valve.stucked == 1}). Cette
 condition est assurée par l'assertion :
 \begin{verbatim}
 # ligne 154 tank.alt
@@ -118,6 +118,8 @@ $93$). En revanche le système peut se bloquer ($deadlock > 0$).
 Les itérations suivantes ne modifient pas significativement les résultats.
 
 \subsubsection{Avec 2 défaillances (0.5 point)}
+\input{LaTeX/System2FCtrl.tex}
+\paragraph{Interprétation des résultats}
 
 Avec 2 défaillances, le nombre d'états où le niveau de la cuve se retrouve en
 zone critique augmente par rapport au système avec une seule défaillance ($SR = NC = 551$).
@@ -125,17 +127,19 @@ zone critique augmente par rapport au système avec une seule défaillance ($SR 
 Après la première itération, le nombre d'états en situation redoutée diminue ($SR = 239$)
 mais introduit des situations bloquantes ($deadlock = 239$).
 La stabilisation est atteinte à la 4ème itération, cependant, le système ne respecte toujours
-par le premier objectif.
+pas le premier objectif.
 
 \subsubsection{Avec 3 défaillances (0.5 point)}
+\input{LaTeX/System3FCtrl.tex}
+\paragraph{Interprétation des résultats}
 
-Avec 3 défaillances, le système ne respecte toujours par le premier objectifs car après
-stabilisation $SR = 27$, même si le nombre à diminué par rapport au système avec 2 défaillances,
-mais cela s'explique par le fait qu'il y a nécessairement moins d'états accessibles.
+Avec 3 défaillances, le système ne respecte toujours pas le premier objectif car après
+stabilisation $SR = 27$, même si le nombre à diminué par rapport au système avec 2 défaillances.
+Cela s'explique par le fait qu'il y a nécessairement moins d'états accessibles.
 
 \subsection{Bilan avec le contrôleur initial (1 point)}
 
-Le contrôleur initial ne permet de modéliser un système respectant les deux
+Le contrôleur initial ne permet pas de modéliser un système respectant les deux
 objectifs seulement si il n'y a pas de défaillances. Il ne permet donc pas de
 modéliser un système réaliste et robuste.
 
@@ -151,7 +155,7 @@ elle ne peut donc pas tomber en panne.
 
 Sa sémantique est la suivante :
 \begin{itemize}
-  \item si les variables \texttt{rate} et \texttt{reateReal} coïncident, alors
+  \item si les variables \texttt{rate} et \texttt{rateReal} coïncident, alors
     l'évènement \texttt{dec} (resp. \texttt{inc}) permet de décrémenter (resp.
     incrémenter) la valeur de \texttt{rate}.
   \item sinon, dès lors que les variables \texttt{rate} et \texttt{rateReal} se
@@ -221,11 +225,11 @@ comprends plus que deux états accessibles.
 
 Comme attendu, le contrôleur \texttt{CtrlVV} permet d'améliorer le calcul
 du contrôleur et prenant en compte les cas de pannes, ainsi après stabilisation
-peut importe le nombre de défaillance, les situations redoutées sont évitées. A
+peu importe le nombre de défaillance, les situations redoutées sont évitées. A
 partir, de deux défaillances et une fois le calcul du contrôleur stabilisé il
-ne reste plus que deux états possibles, effet, si deux vannes tombent en pannes
+ne reste plus que deux états possibles, en effet, si deux vannes tombent en pannes
 il faudra nécessairement fermer la troisième pour ne pas rentrer en zone
-critiques.
+critique.
 
 \section{Une première optimisation des contrôleurs pour améliorer le débit aval}
 \subsection{Une optimisation basée sur les priorités (1 point)}
@@ -265,12 +269,12 @@ Sans défaillance, tous les objectifs énoncés pour le contrôleur sont respect
 \end{itemize}
 
 
-Avec une défaillance, tous l'objectif prioritaire énoncé pour le contrôleur est
+Avec une défaillance, l'objectif prioritaire énoncé pour le contrôleur est
 respecté car $SR = 0$, cependant, il est plus difficile de savoir si le débit
 de la vanne aval est maximal.
 
 A partir de 2 défaillances, le système ne se bloque pas et la niveau de la cuve
-ne dépasse pas les niveaux critiques ($SR = 0$), mais cela à un coup car le
+ne dépasse pas les niveaux critiques ($SR = 0$), mais cela à un coût car le
 système ne possède plus que deux états ($any\_s = 2$).
 
 \section{Une deuxième optimisation (3 points)}
@@ -322,7 +326,7 @@ permettant d'avoir une amélioration significative.
 
 Le contrôleur \texttt{CtrlVV} permet de s'assurer que le système ne se bloquera
 pas et ne pourra pas se retrouver dans une situation critique même si cela peut
-entrainer une perte de fonctionnalités.
+entrainer une perte de fonctionnalité.
 Au contraire du contrôleur \texttt{Ctrl} qui ne garantit pas le premier
 objectif en cas de panne.
 
