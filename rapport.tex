@@ -149,45 +149,87 @@ elle ne peut donc pas tomber en panne.
 
 Sa sémantique est la suivante :
 \begin{itemize}
-  \item si les variables \texttt{rate} et \texttt{reateReal} coincïdent, alors l'évènement \texttt{dec} (resp. \texttt{inc})
-    permet de décrementer (resp. incrémenter) la valeur de \texttt{rate}.
+  \item si les variables \texttt{rate} et \texttt{reateReal} coïncident, alors
+    l'évènement \texttt{dec} (resp. \texttt{inc}) permet de décrémenter (resp.
+    incrémenter) la valeur de \texttt{rate}.
   \item sinon, dès lors que les variables \texttt{rate} et \texttt{rateReal} se
-    désynchronisent, cela signifie que la valve physique est tombée en panne : la valve virtuelle
-    n'est alors plus utilisable.
+    désynchronisent, cela signifie que la valve physique est tombée en panne :
+    la valve virtuelle n'est alors plus utilisable.
 \end{itemize}
 
 \subsection{Rôle du composant {\tt CtrlVV} (4 points)}
 % A COMPLETER en expliquant les mécanismes mis en oeuvre, leurs rôles et les
 % avantages de ce contrôleur par rapport au précédent CtrlVV.
 
+Le composant \texttt{CtrlVV} utilise 3 \textit{instances} du composant
+\texttt{ValveVirtual} pour simuler le fonctionnement parfait (c'est à dire,
+sans défaillances possible) des trois \texttt{Valve} réelles du système. Pour
+ce faire, chacun des 27 évènements du contrôleur est synchronisé avec les
+évènements correspondants des \texttt{ValveVirtual}, ainsi, quand une commande
+du système est utilisée pour décrémenter ou incrémenter le débit d'une
+\texttt{Valve}, celui de la valve virtuelle du contrôleur \texttt{CtrlVV}
+correspondante est modifié de la même manière.
+
+Comme expliqué dans la section précédente, si une vanne \texttt{Valve} du système
+tombe en panne alors les commandes \texttt{dec} et \texttt{inc} n'auront aucun effet sur cette
+dernière, alors que pour la vanne virtuelle \texttt{ValveVirtual} l'effet sera
+quand même appliqué ce qui causera une désynchronisation de la variable de flux
+\texttt{rateReal} et celle d'état \texttt{rate}.
+
+Finalement, cela permet de \textit{signifier} au système qu'une panne est
+survenue et ainsi permettre d'optimiser le contrôleur lors de la projection.
+
 \section{Résultats avec le contrôleur {\tt CtrlVV}}
 \subsection{Calcul d'un contrôleur}
 \subsubsection{Avec 0 défaillance (0.5 point)}
 \input{LaTeX/System0FCtrlVV.tex}
 \paragraph{Interprétation des résultats}
-% A COMPLETER
+
+Sans défaillance, le contrôleur obtenu après stabilisation des résultats est
+correct car il assure les deux objectifs. A savoir, aucune situation redoutée
+est accessible car $SR = 0$ et le débit de la vanne aval semble avoir été
+maximisé car $out2 > out1 > out0$.
 
 \subsubsection{Avec 1 défaillance (0.5 point)}
 \input{LaTeX/System1FCtrlVV.tex}
 \paragraph{Interprétation des résultats}
-% A COMPLETER
+
+Avec une défaillance, le contrôleur obtenu après stabilisation est toujours
+correcte car $SR = 0$, en revanche il est difficile de se prononcer sur
+l'optimisation du débit de la vanne aval.
 
 \subsubsection{Avec 2 défaillances (0.5 point)}
 \input{LaTeX/System2FCtrlVV.tex}
 \paragraph{Interprétation des résultats}
-% A COMPLETER
+
+Avec deux défaillance, le contrôleur obtenu après stabilisation est toujours
+correcte car $SR = 0$, en revanche le modèle ne comprends plus que deux états
+accessibles.
 
 \subsubsection{Avec 3 défaillances (0.5 point)}
 \input{LaTeX/System3FCtrlVV.tex}
 \paragraph{Interprétation des résultats}
-% A COMPLETER
+
+Avec trois défaillance, comme pour deux défaillances, le contrôleur obtenu
+après stabilisation est toujours correcte car $SR = 0$ mais le modèle ne
+comprends plus que deux états accessibles.
 
 \subsection{Bilan avec le contrôleur CtrlVV (1 point)}
-% A COMPLETER
+
+Comment attendu, le contrôleur \texttt{CtrlVV} permet d'améliorer la projection
+du contrôleur et prenant en compte les cas de pannes, ainsi après stabilisation
+peut importe le nombre de défaillance, les situations redoutées sont évitées. A
+partir, de deux défaillances et une fois le calcul du contrôleur stabilisé il
+ne reste plus que deux états possibles, effet, si deux vannes tombent en pannes
+il faudra nécessairement fermer la troisième pour ne pas rentrer en zone
+critiques.
+
 
 \section{Une première optimisation des contrôleurs pour améliorer le débit aval}
 \subsection{Une optimisation basée sur les priorités (1 point)}
+
 \small{\lstinputlisting{ControleursOpt/Optimisation.alt}}
+
 L'optimisation mise en place défini un ordre de priorité sur les différentes
 actions sur les vannes. En particulier, sur la vanne aval : $inc > nop > dec$.
 Cela forcera donc à choisir les actions maximisant le débit de la vanne aval,
@@ -229,8 +271,8 @@ A partir de 2 défaillances, le système ne se bloque pas et la niveau de la cuv
 ne dépasse pas les niveaux critiques ($SR = 0$), mais cela à un coup car le
 système ne possède plus que deux états ($any\_s = 2$).
 
-
 \section{Une deuxième optimisation (3 points)}
+
 Il est possible d'obtenir de meilleurs résultats que les précédents par au moins deux façons.
 \begin{enumerate}
 \item En utilisant un meilleur ordre pour les priorités entre événements.
