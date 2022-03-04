@@ -24,7 +24,7 @@ Synthèse (assistée) d'un contrôleur du niveau d'une cuve}
 
 \date{}
 
-\author{Nom1 \and Nom2 \and Nom3}
+\author{Emile ROLLEY \and Gilles SOUTON}
 
 \maketitle
 
@@ -49,123 +49,199 @@ Le rapport est sur 20 points.
     \end{itemize}
   \item règle \texttt{sources} : exécute \texttt{make all} pour les
     sous-répertoires \texttt{Alt} et \texttt{Spec}.
-  \item règle \texttt{tank.time} 
+  \item règle \texttt{tank.time} :
       \begin{enumerate}
-          \item Pour chaque controleur \texttt{Ctrl} et \texttt{CtrlVV}, est créé un fichier \texttt{tank.alt}. 
-              Ce fichier est l'aggrégation de l'ensembles des fichiers AltaRica du répertoire \texttt{Alt}.
-          \item On cacule ensuite un controleur a partir du fichier \texttt{tank.alt} et des specifications 
-              \texttt{System.spe}.
-          \item On itère ensuite dans le but de calculer un nouveau controleur et on le compare 
-              avec l'ancien controlleur.
-              Si les controleurs diffèrent on continue alors les itérations. 
-              Sinon si il n'y a pas de différence on s'arrête.
-          \item On reitère les operations ci dessus en incrémentant le nombres de pannes
-              pour chaque controlleur tout en incrémentant le nombre de défaillance dans le système.
-          \item Enfin on termine en exécutant la commande \texttt{make} dans tous les
-              sous-répertoires : \texttt{Res} \texttt{Controleurs} \texttt{Graphs}
-              \texttt{LaTeX}.
+          \item Pour chacun des contrôleurs (\texttt{Ctrl} et \texttt{CtrlVV})
+            et pour chaque nombre de défaillance (de 0 à 3), est
+            créé un fichier \texttt{tank.alt} . Ce fichier est l'agrégation de
+            l'ensemble des fichiers AltaRica du répertoire \texttt{Alt}.
+          \item Les fichiers \texttt{test.alt} et \texttt{test.spe} sont créés
+            en remplaçant les différentes \textit{placeholders} des fichiers
+            \texttt{tank.alt} et \texttt{test.spe} par leurs valeurs
+            correspondantes -- nombre de pannes, nom du contrôleur, etc...
+          \item Les résultats de la commande \texttt{arc} sont ensuite écrits
+            dans les fichiers \texttt{Res/*.res} correspondants.
+            Cette procédure est répétée jusqu'à stabilisation des résultats (ou
+            5 fois maximum dans le cas échéant).
+          \item Une fois stabilisé, les fichiers \texttt{test.alt} et
+            \texttt{test.spe} sont recréés et exécutées mais en utilisant la
+            version optimisée du contrôleur courant.
+          \item Finalement, la commande \texttt{make} est exécutée dans
+            tous les sous-répertoires : \texttt{Res} \texttt{Controleurs}
+            \texttt{Graphs} \texttt{LaTeX}.
       \end{enumerate}
 \end{itemize}
 
 \subsection{Rôle de la constante {\tt nbFailures} et de l'assertion associée (0.5 point)}
 
-La constante \texttt{nbFailures} corresponds au nombre de maximum de vannes pouvant tombées
-en pannes simultanément (\texttt{Valve.stucked == 1}).
-Cette condition est assurée par l'assertion :
+La constante \texttt{nbFailures} corresponds au nombre de maximum de vannes
+pouvant tomber en pannes simultanément (\texttt{Valve.stucked == 1}). Cette
+condition est assurée par l'assertion :
 \begin{verbatim}
 # ligne 154 tank.alt
-  nbFailures >= (V[0].stucked + V[1].stucked + V[2].stucked);
+nbFailures >= (V[0].stucked + V[1].stucked + V[2].stucked);
 \end{verbatim}
+
+Par exemple, si les vannes $0$ et $1$ tombent en pannes :
+$$
+V[0].stucked + V[1].stucked + V[2].stucked = 1 + 1 + 0 = 2
+$$
+
+l'assertion serait donc vérifiée pour $nbFailures >= 2$.
 
 \section{Résultats avec le contrôleur initial {\tt Ctrl}}
 \subsection{Calcul d'un contrôleur}
 \subsubsection{Avec 0 défaillance (0.5 point)}
 \input{LaTeX/System0FCtrl.tex}
 \paragraph{Interprétation des résultats}
-Pour rappel les situations redoutés sont l'union des états critiques et des deadlock 
-\textfff{SR := deadlock | NC;}
-\begin{itemize}
-    \item Avec 0 défaillance dans le systèmes on peut voir que le premier controlleur calculé
-contient des états de situations redoutés.
-    \item Après une projection le nouveau controlleur généré ne contient plus de situations redoutés.
-    \item A la deuxième itération il n'y a plus de changement pour les controleurs obtenus,
-les resultats sont stables le controleur est alors correct.
-\end{itemize}
+
+Sans défaillance, le contrôleur initial ne vérifie pas l'objectif principal à
+savoir : garantir la non accessibilité des situations redoutées ($SR > 0$).
+Cependant, après projection, ces situations ne sont plus accessible ($SR = 0$).
+De plus le débit de la vanne aval semble avoir été maximisé ($out2 > out1 >
+out0$), ce qui valide le second objectif.
+
+La stabilisation est atteinte dès la deuxième itération.
 
 \subsubsection{Avec 1 défaillance (0.5 point)}
 \input{LaTeX/System1FCtrl.tex}
 \paragraph{Interprétation des résultats}
-\begin{itemize}
-    \item Avec 1 défaillance le controleur initial contient 329 états redoutés.
-    \item Après une première itération le controleur calculé à diminué considérablement les états critiques 
-        et situations redoutés respectivement à 69 et 93.
-        En revanche ce controlleur à introduit des deadlock dans le système...
-    \item À la deuxième itération le système contient toujours autant d'etats critiques et de situations redoutés.
-        et 3 deadlock en plus.
-    \item A la troisième itération le système n'a pas évolué les resultats se sont stabilisé.
-          Ce controlleur n'est pas correct, le controlleur n'est peut-être pas assez performant. 
-\end{itemize}
+
+Avec une défaillance, le contrôleur initial ne garantit pas le maintient du
+niveau de la cuve hors des zones critiques ($NC > 0$), cependant, le système ne
+peut pas se bloquer ($deadlock = 0$).
+
+Après une première itération le contrôleur calculé à diminué le nombre d'états
+où le niveau de la cuve se retrouve en zone critique ($NC = 69$ au lieu de
+$93$). En revanche le système peut se bloquer ($deadlock > 0$).
+
+Les itérations suivantes ne modifient pas significativement les résultats.
 
 \subsubsection{Avec 2 défaillances (0.5 point)}
 \input{LaTeX/System2FCtrl.tex}
 \paragraph{Interprétation des résultats}
-\begin{itemize}
-    \item La controleur initial contient 551 états redoutés.
-    \item En itérant le processus de calcul l'etat se stabilise à la 4ème itération, cependant
-        le controleur n'est pas correct il contient 107 états critiques, 270 situations redoutés.
-\end{itemize}
+
+Avec 2 défaillances, le nombre d'états où le niveau de la cuve se retrouve en
+zone critique augmente par rapport au système avec une seule défaillance ($SR = NC = 551$).
+
+Après la première itération, le nombre d'états en situation redoutée diminue ($SR = 239$)
+mais introduit des situations bloquantes ($deadlock = 239$).
+La stabilisation est atteinte à la 4ème itération, cependant, le système ne respecte toujours
+pas le premier objectif.
 
 \subsubsection{Avec 3 défaillances (0.5 point)}
 \input{LaTeX/System3FCtrl.tex}
 \paragraph{Interprétation des résultats}
-\begin{itemize}
-    \item La controleur initial contient 617 situations redoutés.
-    \item En itérant le processus de calcul l'etat se stabilise à la 3ème itération, cependant
-        le controleur n'est pas correct il contient 27 situations redoutés.
-\end{itemize}
+
+Avec 3 défaillances, le système ne respecte toujours pas le premier objectif car après
+stabilisation $SR = 27$, même si le nombre à diminué par rapport au système avec 2 défaillances.
+Cela s'explique par le fait qu'il y a nécessairement moins d'états accessibles.
 
 \subsection{Bilan avec le contrôleur initial (1 point)}
-% A COMPLETER
+
+Le contrôleur initial ne permet pas de modéliser un système respectant les deux
+objectifs seulement si il n'y a pas de défaillances. Il ne permet donc pas de
+modéliser un système réaliste et robuste.
 
 \section{Construction d'un contrôleur initial plus performant}
 \subsection{Rôle du composant {\tt ValveVirtual}(2 points)}
 \includegraphics[height=.2\textheight,width=.5\textwidth]{Graphs/Valve-modes.pdf}
 \includegraphics[height=.2\textheight,width=.5\textwidth]{Graphs/ValveVirtual-modes.pdf}
-% A COMPLETER en expliquant sa sémantique et son rôle.
+
+Le composant \texttt{ValveVirtual} est la représentation théorique d'une valve
+physique. Elle permet donc de simuler le fonctionnement et l'évolution d'une
+valve \textit{parfaite}, c'est-à-dire, sans contrainte de l'environnement :
+elle ne peut donc pas tomber en panne.
+
+Sa sémantique est la suivante :
+\begin{itemize}
+  \item si les variables \texttt{rate} et \texttt{rateReal} coïncident, alors
+    l'évènement \texttt{dec} (resp. \texttt{inc}) permet de décrémenter (resp.
+    incrémenter) la valeur de \texttt{rate}.
+  \item sinon, dès lors que les variables \texttt{rate} et \texttt{rateReal} se
+    désynchronisent, cela signifie que la valve physique est tombée en panne :
+    la valve virtuelle n'est alors plus utilisable.
+\end{itemize}
 
 \subsection{Rôle du composant {\tt CtrlVV} (4 points)}
 % A COMPLETER en expliquant les mécanismes mis en oeuvre, leurs rôles et les
 % avantages de ce contrôleur par rapport au précédent CtrlVV.
+
+Le composant \texttt{CtrlVV} utilise 3 \textit{instances} du composant
+\texttt{ValveVirtual} pour simuler le fonctionnement parfait (c'est à dire,
+sans défaillances possible) des trois \texttt{Valve} réelles du système. Pour
+ce faire, chacun des 27 évènements du contrôleur est synchronisé avec les
+évènements correspondants des \texttt{ValveVirtual}, ainsi, quand une commande
+du système est utilisée pour décrémenter ou incrémenter le débit d'une
+\texttt{Valve}, celui de la valve virtuelle du contrôleur \texttt{CtrlVV}
+correspondante est modifié de la même manière.
+
+Comme expliqué dans la section précédente, si une vanne \texttt{Valve} du
+système tombe en panne alors les commandes \texttt{dec} et \texttt{inc}
+n'auront aucun effet sur cette dernière, alors que pour la vanne virtuelle
+\texttt{ValveVirtual} l'effet sera quand même appliqué ce qui causera une
+désynchronisation de la variable de flux \texttt{rateReal} et celle d'état
+\texttt{rate}.
+
+Finalement, cela permet de \textit{signifier} au système qu'une panne est
+survenue et ainsi permettre d'optimiser le contrôleur lors de la projection.
 
 \section{Résultats avec le contrôleur {\tt CtrlVV}}
 \subsection{Calcul d'un contrôleur}
 \subsubsection{Avec 0 défaillance (0.5 point)}
 \input{LaTeX/System0FCtrlVV.tex}
 \paragraph{Interprétation des résultats}
-% A COMPLETER
+
+Sans défaillance, le contrôleur obtenu après stabilisation des résultats est
+correct car il assure les deux objectifs. A savoir, aucune situation redoutée
+est accessible car $SR = 0$ et le débit de la vanne aval semble avoir été
+maximisé car $out2 > out1 > out0$.
 
 \subsubsection{Avec 1 défaillance (0.5 point)}
 \input{LaTeX/System1FCtrlVV.tex}
 \paragraph{Interprétation des résultats}
-% A COMPLETER
+
+Avec une défaillance, le contrôleur obtenu après stabilisation est toujours
+correcte car $SR = 0$, en revanche il est difficile de se prononcer sur
+l'optimisation du débit de la vanne aval.
 
 \subsubsection{Avec 2 défaillances (0.5 point)}
 \input{LaTeX/System2FCtrlVV.tex}
 \paragraph{Interprétation des résultats}
-% A COMPLETER
+
+Avec deux défaillance, le contrôleur obtenu après stabilisation est toujours
+correcte car $SR = 0$, en revanche le modèle ne comprends plus que deux états
+accessibles.
 
 \subsubsection{Avec 3 défaillances (0.5 point)}
 \input{LaTeX/System3FCtrlVV.tex}
 \paragraph{Interprétation des résultats}
-% A COMPLETER
+
+Avec trois défaillance, comme pour deux défaillances, le contrôleur obtenu
+après stabilisation est toujours correcte car $SR = 0$ mais le modèle ne
+comprends plus que deux états accessibles.
 
 \subsection{Bilan avec le contrôleur CtrlVV (1 point)}
-% A COMPLETER
+
+Comme attendu, le contrôleur \texttt{CtrlVV} permet d'améliorer le calcul
+du contrôleur et prenant en compte les cas de pannes, ainsi après stabilisation
+peu importe le nombre de défaillance, les situations redoutées sont évitées. A
+partir, de deux défaillances et une fois le calcul du contrôleur stabilisé il
+ne reste plus que deux états possibles, en effet, si deux vannes tombent en pannes
+il faudra nécessairement fermer la troisième pour ne pas rentrer en zone
+critique.
 
 \section{Une première optimisation des contrôleurs pour améliorer le débit aval}
 \subsection{Une optimisation basée sur les priorités (1 point)}
+
 \small{\lstinputlisting{ControleursOpt/Optimisation.alt}}
-% A COMPLETER en expliquant en quoi consiste l'optimisation mise en place.
+
+L'optimisation mise en place défini un ordre de priorité sur les différentes
+actions sur les vannes. En particulier, sur la vanne aval : $inc > nop > dec$.
+Cela forcera donc à choisir les actions maximisant le débit de la vanne aval,
+en effet, l'action incrémentant le débit est prioritaire par rapport aux deux
+autres et l'action de ne pas modifier le débit est prioritaire à celle le
+diminuant.
 
 \subsection{Calcul des contrôleurs optimisés avec {\tt CtrlVV}}
 \paragraph{Avec 0 défaillance}\ \\
@@ -181,9 +257,28 @@ les resultats sont stables le controleur est alors correct.
 \input{LaTeX/System3FCtrlVV_opt.tex}
 
 \subsection{Bilan avec la première optimisation du contrôleur CtrlVV (1 point)}
-% A COMPLETER
+
+Sans défaillance, tous les objectifs énoncés pour le contrôleur sont respectés :
+\begin{itemize}
+  \item $SR = 0$, assure que le système ne peut pas se bloquer ($deadlock = 0$)
+    et que le niveau de la cuve ne dépasse jamais les niveau critiques ($NC =
+    0$),
+  \item $out2 > out1 > out0$, semble indiqué que le débit de la vanne aval est
+    maximisé, c'est accentué par le fait que le débit n'est décrémenté qu'une
+    seule fois ($dec21 = 1 \wedge dec10 = 0$).
+\end{itemize}
+
+
+Avec une défaillance, l'objectif prioritaire énoncé pour le contrôleur est
+respecté car $SR = 0$, cependant, il est plus difficile de savoir si le débit
+de la vanne aval est maximal.
+
+A partir de 2 défaillances, le système ne se bloque pas et la niveau de la cuve
+ne dépasse pas les niveaux critiques ($SR = 0$), mais cela à un coût car le
+système ne possède plus que deux états ($any\_s = 2$).
 
 \section{Une deuxième optimisation (3 points)}
+
 Il est possible d'obtenir de meilleurs résultats que les précédents par au moins deux façons.
 \begin{enumerate}
 \item En utilisant un meilleur ordre pour les priorités entre événements.
@@ -214,11 +309,25 @@ Vous devez proposer une des deux optimisations conduisant à une solution dans l
 \small{\lstinputlisting{ControleursOpt/Optimisation-2.alt}}
 % A COMPLETER en décrivant les résultats obtenus
 
+Pour maximiser le débit de la vanne aval il faut que la somme des débits des
+vannes en amonts soit égal à celui de la vanne aval, pour éviter que le niveau
+de la cuve ne se retrouve en zone critique car la cuve se viderait plus vite
+qu'elle ne se remplierait. En particulier, il faut que les deux vannes en amonts
+aient un débit de 1.
+
+Malheureusement, nous n'avons pas réussi définir un ordre sur les commandes
+permettant d'avoir une amélioration significative.
+
 \paragraph{Le nouveau système d'équations}\ \\
 \small{\lstinputlisting[texcl]{Spec/System-2.spe}}
 % A COMPLETER en décrivant les résultats obtenus
 
 \section{Conclusion sur la synthèse de contrôleur (1 point)}
-% A COMPLETER
+
+Le contrôleur \texttt{CtrlVV} permet de s'assurer que le système ne se bloquera
+pas et ne pourra pas se retrouver dans une situation critique même si cela peut
+entrainer une perte de fonctionnalité.
+Au contraire du contrôleur \texttt{Ctrl} qui ne garantit pas le premier
+objectif en cas de panne.
 
 \end{document}
